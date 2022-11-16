@@ -35,10 +35,6 @@ class Construct:
         if self.device.nos in TRANSPORT_REST:
             self.transport = "rest"
 
-        # Remove slashes from target for required platforms
-        if self.device.nos in TARGET_FORMAT_SPACE:
-            self.target = re.sub(r"\/", r" ", str(self.query_data.query_target))
-
         # Set AFIs for based on query type
         if self.query_data.query_type in ("bgp_route", "ping", "traceroute"):
             # For IP queries, AFIs are enabled (not null/None) VRF -> AFI definitions
@@ -131,6 +127,9 @@ class Formatter:
         pass
 
     def _get_formatter(self):
+        if self.nos in TARGET_FORMAT_SPACE:
+            if self.query_type == "bgp_route":
+                return self._huawei_bgp_route
         if self.nos in ("juniper", "juniper_junos"):
             if self.query_type == "bgp_aspath":
                 return self._juniper_bgp_aspath
@@ -144,6 +143,12 @@ class Formatter:
     def _default(self, target: str) -> str:
         """Don't format targets by default."""
         return target
+
+    def _huawei_bgp_route(self, target: str) -> str:
+        """Remove slashes from target for required platforms."""
+        self.target = re.sub(r"\/", r" ", str(target))
+        log.debug("Modified target '{}' to '{}'", target, self.target)
+        return self.target
 
     def _juniper_bgp_aspath(self, target: str) -> str:
         """Convert from Cisco AS_PATH format to Juniper format."""

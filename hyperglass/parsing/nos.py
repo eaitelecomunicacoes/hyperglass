@@ -2,6 +2,7 @@
 
 # Local
 from .arista import parse_arista
+from .huawei import parse_huawei
 from .juniper import parse_juniper
 from .mikrotik import parse_mikrotik
 
@@ -15,6 +16,11 @@ structured_parsers = {
         "bgp_route": parse_arista,
         "bgp_aspath": parse_arista,
         "bgp_community": parse_arista,
+    },
+    "huawei": {
+        "bgp_route": parse_huawei,
+        "bgp_aspath": parse_huawei,
+        "bgp_community": parse_huawei,
     },
 }
 
