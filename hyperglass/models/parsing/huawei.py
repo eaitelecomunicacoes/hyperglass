@@ -82,7 +82,7 @@ class HuaweiRoute(_HuaweiBase):
                     "med": route.metric,
                     "local_preference": route.local_preference,
                     "as_path": route.as_path,
-                    "communities": route.communities,
+                    "communities": route.communities + route.ext_communities + route.large_communities,
                     "next_hop": route.original_next_hop,
                     "source_as": 0,
                     "source_rid": "",
